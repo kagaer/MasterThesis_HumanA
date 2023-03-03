@@ -1,0 +1,37 @@
+Documentation
+
+Preprocessing Scripts Order:
+
+1. CreateDB 
+    - creates the Database tables for the raw participant data
+2. CreateAvatarsDB
+    - creates the Database table for the raw Avatars data
+3. CreateGraph
+    - creates the graph from the CSV file of the Master Thesis of Mellissa and stores it in the database
+4. RecreateGraphFromDB
+    - use this code to recreate the graph from the database
+5. Create_Density_Matrix
+    - creates a density matrix from the raw data for each participant and saves it to the database
+    - creates full density matrix over all participants and stores it in the database
+6. Density_Plots
+    - creates density matrix plots of both experiments and calculates the normalized integral of each matrix
+    - NOTE: needs some adjustment (check Mellis renewed script)
+7. Avatar_Reduction
+    - saves only necessary information of the raw avatar data & converts coordinates
+8. Graph_Coordinates
+    - saves the elements of the graph with the corresponding coordinates
+    - information about the node: nodeRadius, nodeCentroid x and z, corresponding x and z coordinates (pixel values)
+    - information about the edges: edgeStart & edgeEnd (neighbouring nodes nrs), corresponding x and z coordinates (pixel values) 
+9. Data_Reduction
+    - matches each coordinate to an element of the graph and throws out duplicate datapoints (where participants stayed longer on one element)
+10. Graph_Element_Correction_On_Datapoints
+    - checks for all datapoints that don't have a matching element (due to same distance to multiple elements before)
+    - throws out remaining duplicates
+    - adds an element to the datapoint that matches the previous and next datapoints elements
+11. Coordinates_to_Graph_Element
+    - maps each coordinate to a corresponding graph element, for participants datapoints as well as for avatar coordinates
+    - TODO: take out the participant part of this, because that is done in the previous script
+12. Check_Continuity_Datapoints
+    - checks if the routes correspond to a continous route within the graph, starting with the start point
+    - adjusts datapoints (if it is only one datapoint in a row)
+    - saves information about false files
