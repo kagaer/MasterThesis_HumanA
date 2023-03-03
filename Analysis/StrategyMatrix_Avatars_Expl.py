@@ -2,15 +2,9 @@ import sqlite3
 from pathlib import Path
 from typing import List, Tuple, Union
 import numpy as np
-import seaborn as sns
-import matplotlib.pylab as plt
-import matplotlib as mpl
-import plotly.colors
-from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 import enum
-#from GetPlotlyColorScale import *
 from MultipleUseFunctions import * 
 
 # path to databases
@@ -32,9 +26,6 @@ connection=sqlite3.connect(db_path)
 cr=connection.cursor()
 
 
-temp_count_avoiding = 0
-temp_count_seeking = 0
-
 class TrialValidity(enum.Enum):
     Valid = 1
     MissingTrial = 2
@@ -43,6 +34,17 @@ class TrialValidity(enum.Enum):
 
 
 def getVisits(node):
+    """get the number of visits of a node for the current session and overall
+
+    Args:
+        node (int): node for which you want to get the number of visits
+
+    Returns:
+        visits_participant_total(int): total nr of visits for current participant
+        visits_participant_currentSes (int) : session nr of visits for current participant
+        visits_total (int) : total nr of visits over all participants
+        visits_currentSes (int) : session nr of visits over all participants 
+    """
     visits_participant_total = visits_node_participant_total[node]
     visits_participant_currentSes = visits_node_participant_currentSes[node]
 
