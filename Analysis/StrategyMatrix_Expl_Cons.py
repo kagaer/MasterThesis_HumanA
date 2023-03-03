@@ -14,17 +14,12 @@ print("For which experiment would you like to reduce the data?")
 experiment = int(input())
 if experiment == 1:
     db_path = Path('E:/HumanA/Data/Database/HumanA_Exp1.db')
-    #db_path = Path('E:/HumanA/Data/HumanA_Exp1_WorkingData.db')
 elif experiment == 2:
     db_path = Path('E:/HumanA/Data/Database/HumanA_Exp2.db')
-    #db_path = Path('E:/HumanA/Data/HumanA_Exp2_WorkingData.db')
 
 # check if path exists
 if not db_path or not db_path.exists():
     db_path = ':memory:'
-
-#print("Full Dataset (1) or only consecutive Data (2)?")
-#dataSet = int(input())
 
 # connect to database
 connection=sqlite3.connect(db_path)
@@ -120,7 +115,6 @@ def getMaxNodeFromDB():
     
     cr.execute(sql_instruction)
     max_node = cr.fetchone()
-    #maxNode = tuple(did[0] for did in cr.fetchall())
     return max_node[0]
 
 def resize_matrix(matrix, shape):
@@ -159,13 +153,6 @@ def addUpMatrices(matrix1, matrix2):
     
     return result
 
-#def getVisits(currentNode, avatarNotChosenDir, noAvatarNotChosenDir):
-#    visits_current_node = visits_node[currentNode]
-#    visits_avat_notChosen = [visits_node[node] for node in avatarNotChosenDir]
-#    visits_no_avat_notChosen = [visits_node[node] for node in noAvatarNotChosenDir]
-#
-#    return visits_current_node, visits_avat_notChosen, visits_no_avat_notChosen
-
 def getTotalVisitsNodes(chosenNode, neighbouringNodes):
     visits_chosenNode = visits_node_total[chosenNode]
     visits_neighbouringNodes = [visits_node_total[node] for node in neighbouringNodes]
@@ -183,15 +170,9 @@ def plotAndSafeStratMatrix(matrix_total,matrix_sessions, participant = None, ses
     save_path = "E:/HumanA/Analysis/StrategyMatrices/"
     if experiment == 1:
         save_path = save_path + "Exp1/Strategy_Matrix/"
-        #save_path = save_path + "Exp1/All_Sessions/Expl_Strategy/"
+
     elif experiment == 2:
         save_path = save_path + "Exp2/Strategy_Matrix/"
-        #save_path = save_path + "Exp2/All_Sessions/Expl_Strategy/"
-
-    #if dataSet == 1:
-    #    save_path = save_path + "FullDataSet/Strategy_Matrix/"
-    #elif dataSet == 2:
-    #    save_path = save_path + "ConsDataSet/Strategy_Matrix/"
 
     if participant != None:
         filename = "Strategy_Matrix_Expl_" + str(participant) + ".png"
@@ -227,7 +208,6 @@ def plotAndSafeStratMatrix(matrix_total,matrix_sessions, participant = None, ses
 
     for session in sessions:
         if len(matrix_total[session-1]) > 0:
-            #filename = "Strategy_Matrix_" + str(participant) + "_Session_" + str(session) + ".png"
             count_cons, count_expl, count_total = getStrategyCounts(matrix_total[session-1])
             perc_cons = round((count_cons/count_total), 2)
             perc_expl = round((count_expl/count_total),2)
@@ -251,11 +231,11 @@ def plotAndSafeStratMatrix(matrix_total,matrix_sessions, participant = None, ses
                     borderwidth=1,
                     x = 0, y = 1,
                     xanchor= 'left', yanchor='top',
-                    xref = 'x domain', yref = 'y domain', #'paper',
-                    align="left",#valign = "top", 
+                    xref = 'x domain', yref = 'y domain', 
+                    align="left",
                     name="Strategy Counts", row=1, col = session)
         if len(matrix_sessions[session-1]) > 0:
-            #filename = "Strategy_Matrix_" + str(participant) + "_Session_" + str(session) + ".png"
+
             count_cons, count_expl, count_total = getStrategyCounts(matrix_sessions[session-1])
             perc_cons = round((count_cons/count_total), 2)
             perc_expl = round((count_expl/count_total),2)
@@ -266,7 +246,7 @@ def plotAndSafeStratMatrix(matrix_total,matrix_sessions, participant = None, ses
                 row=2, col=session)
             fig.update_traces(showscale=False)
             fig.update_layout(
-              #title_text=title,
+
               boxmode='group',
               width=2000,
               height=1000,
@@ -279,20 +259,18 @@ def plotAndSafeStratMatrix(matrix_total,matrix_sessions, participant = None, ses
                     borderwidth=1,
                     x = 0, y = 1,
                     xanchor= 'left', yanchor='top',
-                    xref = 'x domain', yref = 'y domain', #'paper',
-                    align="left",#valign = "top", 
+                    xref = 'x domain', yref = 'y domain', 
+                    align="left",
                     name="Strategy Counts", row=2, col = session)
 
     fig.write_image((save_path + filename))
-            #fig = plt.figure(figsize=(24,18))
-            #sns.heatmap(matrix[session-1], xticklabels=False, yticklabels=False, cmap='coolwarm', cbar=False)
-            #fig.savefig((save_path + filename), transparent = True)
+
 
 
 
 participants = getParticipants()
 max_node = getMaxNodeFromDB()
-#avatarNodes, avatarEdges = getAvatarPositions()
+
 
 strategy_matrix_total = [np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))]
 strategy_matrix_total_sessions = [np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))]
@@ -306,7 +284,7 @@ for participant in participants:
     strategy_matrix_participant_perSession = [np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))]
     sessions = getSessions(participant)
     last_session = 0
-    #pre_last_node = []
+
     last_node = []
     
     max_visits_total_participant = 0
@@ -314,12 +292,10 @@ for participant in participants:
         print("Participant: " + str(participant) + " | Session: " + str(session))
         visits_node_currentSes = [0]*(max_node + 1)
         
-        #strategy_matrix_current_total = resize_matrix(strategy_matrix_current_total, max_visits_total_participant+1)
+
         strategy_matrix_current_total = np.zeros((0,0))
         strategy_matrix_current_sess = np.zeros((0,0))
-        #if session != (last_session + 1):
-        #    print("Session missing")
-        #    continue
+
         
         max_visits_session_participant = 0
         trials = getTrialNrs(participant, session)
@@ -350,17 +326,14 @@ for participant in participants:
                     max_visits_sessions = max_visits_session_participant+1
                 strategy_matrix_total_sessions[session-1]  = resize_matrix(strategy_matrix_total_sessions[session-1] , max_visits_sessions+1)
 
-            
-            #if trial_id != last_trial_id and last_node != [] and last_node != node:
-                #print("not the same node as in the previous session")
+
 
             if last_node != []:
-                #TODO: get visits of neighbouring nodes (of the last element)
-                #lastNode_neighbours = [neighbour for neighbour in getNodesNeighbours(last_node) if node != neighbour and pre_last_node != neighbour]
+                # get visits of neighbouring nodes (of the last element)
                 lastNode_neighbours = [neighbour for neighbour in getNodesNeighbours(last_node) if node != neighbour]
                 visits_current_node_total, visits_neighbours_total = getTotalVisitsNodes(node, lastNode_neighbours)
                 visits_current_node_session, visits_neighbours_session = getSessionVisitsNodes(node, lastNode_neighbours)
-                #TODO: adjust strategy matrix
+                # adjust strategy matrix
                 for visit in visits_neighbours_total:
                     strategy_matrix_current_total[visits_current_node_total][visit] += 1
                 

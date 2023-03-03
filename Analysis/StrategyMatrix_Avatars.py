@@ -14,17 +14,15 @@ print("For which experiment would you like to reduce the data?")
 experiment = int(input())
 if experiment == 1:
     db_path = Path('E:/HumanA/Data/Database/HumanA_Exp1.db')
-    #db_path = Path('E:/HumanA/Data/HumanA_Exp1_WorkingData.db')
+
 elif experiment == 2:
     db_path = Path('E:/HumanA/Data/Database/HumanA_Exp2.db')
-    #db_path = Path('E:/HumanA/Data/HumanA_Exp2_WorkingData.db')
+
 
 # check if path exists
 if not db_path or not db_path.exists():
     db_path = ':memory:'
 
-#print("Full Dataset (1) or only consecutive Data (2)?")
-#dataSet = int(input())
 
 print("Single Decison Count (1) or multiple Decision Count (2)?")
 decCount = int(input())
@@ -138,7 +136,6 @@ def getMaxNodeFromDB():
     
     cr.execute(sql_instruction)
     max_node = cr.fetchone()
-    #maxNode = tuple(did[0] for did in cr.fetchall())
     return max_node[0]
 
 def getCountDecisions(dp_ids):
@@ -167,19 +164,16 @@ def resize_matrix(matrix, shape):
     return np.lib.pad(matrix, ((0,shape_diff[0]),(0,shape_diff[1])), 'constant', constant_values=(0))
 
 def addDecisionsToNode(last_node, decisions):
-    #global temp_count_seeking
-    #global temp_count_avoiding 
     if decCount == 1:
         avatarAtChosen = False
         avatarAtNotChosen = False
         for decision in decisions:
             if decision[2] == 'AvatarAtChosen':
                 avatarAtChosen = True
-                #temp_count_seeking += 1
+
             elif decision[2] == 'AvatarAtNotChosen':
                 avatarAtNotChosen = True
-                #temp_count_avoiding += 1
-##
+
         if avatarAtChosen:
             decisions_node_seeking_total[last_node] += 1
             decisions_node_seeking_currentSes[last_node] += 1
@@ -209,46 +203,6 @@ def getNodeDecisionsSession(node):
     return decisions_seeking, decisions_avoiding
 
 
-#def getNodesNeighbours(node):
-#    """get the neighbouring nodes of a node from the database
-#
-#    Args:
-#        node (int): node for which the neighbours are selected
-#
-#    Returns:
-#        neighbours (list(int)) : list of all the neighbours found
-#    """
-#
-#    sql_instruction = f"""SELECT * FROM node_neighbours WHERE FirstNode = {node} or SecondNode = {node}"""
-#    cr.execute(sql_instruction)
-#    nodes_and_neighbours = cr.fetchall()
-#    neighbours = []
-#    for node_and_neighbour in nodes_and_neighbours:
-#        if node_and_neighbour[0] == node:
-#            neighbours.append(node_and_neighbour[1])
-#        elif node_and_neighbour[1] == node:
-#            neighbours.append(node_and_neighbour[0])
-#    return neighbours
-
-#def getVisits(currentNode, avatarNotChosenDir, noAvatarNotChosenDir):
-#    visits_current_node = visits_node[currentNode]
-#    visits_avat_notChosen = [visits_node[node] for node in avatarNotChosenDir]
-#    visits_no_avat_notChosen = [visits_node[node] for node in noAvatarNotChosenDir]
-#
-#    return visits_current_node, visits_avat_notChosen, visits_no_avat_notChosen
-
-#def getTotalVisitsNodes(chosenNode, neighbouringNodes):
-#    visits_chosenNode = visits_node_total[chosenNode]
-#    visits_neighbouringNodes = [visits_node_total[node] for node in neighbouringNodes]
-#
-#    return visits_chosenNode, visits_neighbouringNodes
-#
-#def getSessionVisitsNodes(chosenNode, neighbouringNodes):
-#    visits_chosenNode = visits_node_currentSes[chosenNode]
-#    visits_neighbouringNodes = [visits_node_currentSes[node] for node in neighbouringNodes]
-#
-#    return visits_chosenNode, visits_neighbouringNodes
-
 def addUpMatrices(matrix1, matrix2):
 # iterate through rows
     result = matrix1
@@ -258,8 +212,7 @@ def addUpMatrices(matrix1, matrix2):
             result[i][j] = matrix1[i][j] + matrix2[i][j]
     
     return result
-    #for r in result:
-    #    print(r)
+
 
 
 
@@ -271,11 +224,6 @@ def plotAndSafeStratMatrix(matrix_total,matrix_sessions,count_seeking, count_avo
         save_path = save_path + "Exp1/Decision_Matrix/"
     elif experiment == 2:
         save_path = save_path + "Exp2/Decision_Matrix/"
-    
-    #if dataSet == 1:
-    #    save_path = save_path + "FullDataSet/Decision_Matrix/"
-    #elif dataSet == 2:
-    #    save_path = save_path + "ConsDataSet/Decision_Matrix/"
     
     if decCount == 1:
         save_path = save_path + 'SingleDec/'
@@ -315,7 +263,6 @@ def plotAndSafeStratMatrix(matrix_total,matrix_sessions,count_seeking, count_avo
 
     for session in sessions:
         if len(matrix_total[session-1]) > 0:
-            #filename = "Strategy_Matrix_" + str(participant) + "_Session_" + str(session) + ".png"
             count_seeking, count_avoiding, count_total = getStrategyCounts(matrix_total[session-1])
             perc_seek = round((count_seeking/count_total), 2)
             perc_avoid = round((count_avoiding/count_total),2)
@@ -338,12 +285,11 @@ def plotAndSafeStratMatrix(matrix_total,matrix_sessions,count_seeking, count_avo
                     borderwidth=1,
                     x = 0, y = 1,
                     xanchor= 'left', yanchor='top',
-                    xref = 'x domain', yref = 'y domain', #'paper',
-                    align="left",#valign = "top", 
+                    xref = 'x domain', yref = 'y domain',
+                    align="left",
                     name="Strategy Counts", row=1, col = session)
             
         if len(matrix_sessions[session-1]) > 0:
-            #filename = "Strategy_Matrix_" + str(participant) + "_Session_" + str(session) + ".png"
             count_seeking, count_avoiding, count_total = getStrategyCounts(matrix_sessions[session-1])
             perc_seek = round((count_seeking/count_total), 2)
             perc_avoid = round((count_avoiding/count_total),2)
@@ -354,7 +300,7 @@ def plotAndSafeStratMatrix(matrix_total,matrix_sessions,count_seeking, count_avo
                 row=2, col=session)
             fig.update_traces(showscale=False)
             fig.update_layout(
-              #title_text=title,
+
               boxmode='group',
               width=2000,
               height=1000,
@@ -367,20 +313,17 @@ def plotAndSafeStratMatrix(matrix_total,matrix_sessions,count_seeking, count_avo
                     borderwidth=1,
                     x = 0, y = 1,
                     xanchor= 'left', yanchor='top',
-                    xref = 'x domain', yref = 'y domain', #'paper',
-                    align="left",#valign = "top", 
+                    xref = 'x domain', yref = 'y domain',
+                    align="left", 
                     name="Strategy Counts", row=2, col = session)
 
     fig.write_image((save_path + filename))
-            #fig = plt.figure(figsize=(24,18))
-            #sns.heatmap(matrix[session-1], xticklabels=False, yticklabels=False, cmap='coolwarm', cbar=False)
-            #fig.savefig((save_path + filename), transparent = True)
 
 
 
 participants = getParticipants()
 max_node = getMaxNodeFromDB()
-#avatarNodes, avatarEdges = getAvatarPositions()
+
 strategy_matrix_total = [np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))]
 strategy_matrix_total_sessions = [np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))]
 max_decisions_total = 0
@@ -389,7 +332,6 @@ max_decisions_sessions = 0
 count_dec_seeking_total, count_dec_avoiding_total = getCountDecisionsTotal()
 
 for participant in participants:
-    #visits_node_total = [0]*(max_node + 1)
     decisions_node_seeking_total = [0]*(max_node + 1)
     decisions_node_avoiding_total = [0]*(max_node + 1)
 
@@ -397,12 +339,12 @@ for participant in participants:
     strategy_matrix_participant_perSession = [np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))]
     sessions = getSessions(participant)
     last_session = 0
-    #pre_last_node = []
+
     last_node = []
 
     count_dec_avoiding_part = 0
     count_dec_seeking_part = 0
-    #strategy_matrix_current_total = np.zeros((0,0))
+
     max_decisions_total_participant = 0
     for session in sessions:
         print("Participant: " + str(participant) + " | Session: " + str(session))
@@ -410,12 +352,9 @@ for participant in participants:
         decisions_node_avoiding_currentSes = [0]*(max_node + 1)
 
         strategy_matrix_current_total = np.zeros((0,0))
-        #strategy_matrix_current_total = resize_matrix(strategy_matrix_current_total, max_visits_total+1)
+
         strategy_matrix_current_sess = np.zeros((0,0))
-        #if dataSet == 2:
-        #    if session != (last_session + 1):
-        #        print("Session missing")
-        #        continue
+
         
         max_decisions_session_participant = 0
         trials = getTrialNrs(participant, session)
@@ -427,13 +366,10 @@ for participant in participants:
         count_dec_seeking_ses,count_dec_avoiding_ses = getCountDecisions(dp_ids_total)
         count_dec_seeking_part += count_dec_seeking_ses
         count_dec_avoiding_part += count_dec_avoiding_ses
-        #last_trial_id = None
+
         for datapoint in data:
             trial_id, dp_id,timeStamp, node = datapoint
 
-
-            #if trial_id != last_trial_id and last_node != [] and last_node != node:
-                #print("not the same node as in the previous session")
             if last_node != []:
                 decisions = getDecisions(dp_id)
                 if decisions != []:
@@ -463,27 +399,6 @@ for participant in participants:
                     strategy_matrix_current_sess[dec_seeking_ses][dec_avoiding_ses] += 1
                     strategy_matrix_current_total[dec_seeking_total][dec_avoiding_total] += 1
 
-            #if last_node != []:
-
-                ##TODO: get visits of neighbouring nodes (of the last element)
-                ##lastNode_neighbours = [neighbour for neighbour in getNodesNeighbours(last_node) if node != neighbour and pre_last_node != neighbour]
-                #lastNode_neighbours = [neighbour for neighbour in getNodesNeighbours(last_node) if node != neighbour]
-                #visits_current_node_total, visits_neighbours_total = getTotalVisitsNodes(node, lastNode_neighbours)
-                #visits_current_node_session, visits_neighbours_session = getSessionVisitsNodes(node, lastNode_neighbours)
-                ##TODO: adjust strategy matrix
-                #for visit in visits_neighbours_total:
-                #    strategy_matrix_current_total[visits_current_node_total][visit] += 1
-                #
-                #for visit in visits_neighbours_session:
-                #    strategy_matrix_current_sess[visits_current_node_session][visit] += 1
-#
-                ## add visit to the visits count of the current node
-                #visits_node_total[node] += 1
-                #visits_node_currentSes[node] += 1
-                ## adjust strategy matrix in size if necessary
-
-            #last_trial_id = trial_id
-            #pre_last_node = last_node
             last_node = node
         strategy_matrix_participant_total[session-1] = strategy_matrix_current_total
         strategy_matrix_participant_perSession[session-1] = strategy_matrix_current_sess
