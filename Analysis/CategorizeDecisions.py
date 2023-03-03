@@ -9,10 +9,10 @@ print("For which experiment would you like to reduce the data?")
 experiment = int(input())
 if experiment == 1:
     db_path = Path('E:/HumanA/Data/Database/HumanA_Exp1.db')
-    #db_path = Path('E:/HumanA/Data/HumanA_Exp1_WorkingData.db')
+
 elif experiment == 2:
     db_path = Path('E:/HumanA/Data/Database/HumanA_Exp2.db')
-    #db_path = Path('E:/HumanA/Data/HumanA_Exp2_WorkingData.db')
+
 
 # check if path exists
 if not db_path or not db_path.exists():
@@ -52,10 +52,12 @@ def getParticipants():
     Returns:
         tuple: list of participants
     """
-    # select all participantIds and return them
+
     sql_instruction = """
-    SELECT DISTINCT participantId FROM trials WHERE validParticipant = 'VALID';
+    SELECT DISTINCT participantId FROM trials 
     """
+    #WHERE validParticipant = 'VALID';
+    
     cr.execute(sql_instruction)
     participants = tuple(did[0] for did in cr.fetchall())
     return participants
@@ -66,9 +68,9 @@ def getSessions(participant):
     Returns:
         tuple: list of participants
     """
-    # select all participantIds and return them
+
     sql_instruction = f"""
-    SELECT DISTINCT sessionNr FROM trials WHERE participantId = {participant}
+    SELECT DISTINCT sessionNr FROM trials WHERE participantId = {participant} AND WHERE validSession = 'VALID';
     ORDER BY sessionNr;
     """
     cr.execute(sql_instruction)
@@ -107,8 +109,7 @@ def getDatapoints(trial):
     Returns:
         list: all datapoints for this trial 
     """
-    #if len(trials) == 1:
-    #    trials = '('+ str(trials[0]) +')'
+
     sql_instruction = f"""
     SELECT dataPoints_analysis.DatapointId, dataPoints_analysis.timeStampDataPointStart, dataPoints_analysis.node
     FROM dataPoints_analysis
