@@ -9,10 +9,10 @@ print("For which experiment would you like to reduce the data?")
 experiment = int(input())
 if experiment == 1:
     db_path = Path('E:/HumanA/Data/Database/HumanA_Exp1.db')
-    #db_path = Path('E:/HumanA/Data/HumanA_Exp1_WorkingData.db')
+
 elif experiment == 2:
     db_path = Path('E:/HumanA/Data/Database/HumanA_Exp2.db')
-    #db_path = Path('E:/HumanA/Data/HumanA_Exp2_WorkingData.db')
+
 
 # check if path exists
 if not db_path or not db_path.exists():
@@ -52,10 +52,12 @@ def getParticipants():
     Returns:
         tuple: list of participants
     """
-    # select all participantIds and return them
+
     sql_instruction = """
-    SELECT DISTINCT participantId FROM trials WHERE validParticipant = 'VALID';
+    SELECT DISTINCT participantId FROM trials 
     """
+    #WHERE validParticipant = 'VALID';
+    
     cr.execute(sql_instruction)
     participants = tuple(did[0] for did in cr.fetchall())
     return participants
@@ -66,9 +68,9 @@ def getSessions(participant):
     Returns:
         tuple: list of participants
     """
-    # select all participantIds and return them
+
     sql_instruction = f"""
-    SELECT DISTINCT sessionNr FROM trials WHERE participantId = {participant}
+    SELECT DISTINCT sessionNr FROM trials WHERE participantId = {participant} AND validSession = 'VALID'
     ORDER BY sessionNr;
     """
     cr.execute(sql_instruction)
@@ -107,8 +109,7 @@ def getDatapoints(trial):
     Returns:
         list: all datapoints for this trial 
     """
-    #if len(trials) == 1:
-    #    trials = '('+ str(trials[0]) +')'
+
     sql_instruction = f"""
     SELECT dataPoints_analysis.DatapointId, dataPoints_analysis.timeStampDataPointStart, dataPoints_analysis.node
     FROM dataPoints_analysis
@@ -133,7 +134,7 @@ def getMaxNodeFromDB():
     
     cr.execute(sql_instruction)
     max_node = cr.fetchone()
-    #maxNode = tuple(did[0] for did in cr.fetchall())
+
     return max_node[0]
 
 def resize_matrix(matrix, shape):
@@ -174,27 +175,13 @@ def getAvatarPositions():
 
     return avatarNodes,avatarEdges
 
-#def avatarInDirection(lastNode, neighbours, currentNode):
-#    avatarNotChosenDir = []
-#    noAvatarNotChosenDir = []
-#    isAvatarInChosenDir = False
-#    if currentNode in avatarNodes or [lastNode, currentNode] in avatarEdges or [currentNode, lastNode] in avatarEdges:
-#        isAvatarInChosenDir = True
-#        noAvatarNotChosenDir = [node for node in neighbours if node not in avatarNodes and [lastNode, node] not in avatarEdges and [node, lastNode] not in avatarEdges]
-#        avatarNotChosenDir = [node for node in neighbours if node in avatarNodes or [lastNode, node] in avatarEdges or [node, lastNode] in avatarEdges]
-#
-#    else: 
-#        avatarNotChosenDir = [node for node in neighbours if node in avatarNodes or [lastNode, node] in avatarEdges or [node, lastNode] in avatarEdges]
-#
-#    return isAvatarInChosenDir, avatarNotChosenDir,noAvatarNotChosenDir
+
 
 def avatarInDecision(last_node, current_node, neighbouring_node):
     isAvatarAtChosen = False
     isAvatarAtNotChosen = False
     if current_node in avatarNodes or [last_node, current_node] in avatarEdges or [current_node, last_node] in avatarEdges:
         isAvatarAtChosen = True
-        #if neighbouring_node in avatarNodes or [last_node, neighbouring_node] in avatarEdges or [neighbouring_node, last_node] in avatarEdges:
-        #    isAvatarAtNotChosen = True
     if neighbouring_node in avatarNodes or [last_node, neighbouring_node] in avatarEdges or [neighbouring_node, last_node] in avatarEdges:
         isAvatarAtNotChosen = True
     return isAvatarAtChosen, isAvatarAtNotChosen
@@ -239,31 +226,9 @@ def trial_in_db(trial):
     else:
         return False
 
-#def getVisits(currentNode, avatarNotChosenDir, noAvatarNotChosenDir):
-#    visits_current_node = visits_node[currentNode]
-#    visits_avat_notChosen = [visits_node[node] for node in avatarNotChosenDir]
-#    visits_no_avat_notChosen = [visits_node[node] for node in noAvatarNotChosenDir]
-#
-#    return visits_current_node, visits_avat_notChosen, visits_no_avat_notChosen
-
-#def adjustStrategyMatrix(matrix, isAvatarAtChosen, visits_currentNode, visits_avat_notChosen,visits_no_avat_notChosen):
-#    if isAvatarAtChosen and visits_no_avat_notChosen != []:
-#        for visits_noAvat in visits_no_avat_notChosen:
-#            matrix[0][visits_currentNode][visits_noAvat] += 1
-#    elif isAvatarAtChosen and visits_avat_notChosen != []:
-#        for visits_Avat in visits_avat_notChosen:
-#            matrix[0][visits_currentNode][visits_Avat] += 1
-#        #matrix[1][visits_currentNode][visits_avat_notChosen] += 1    
-#    elif not isAvatarAtChosen and visits_avat_notChosen != []:
-#        for visits_Avat in visits_avat_notChosen:
-#            matrix[0][visits_currentNode][visits_Avat] += 1
-#        #matrix[2][visits_currentNode][visits_avat_notChosen] += 1 
-#    return matrix
-
 create_decision_table()
 
 participants = getParticipants()
-#max_node = getMaxNodeFromDB()
 avatarNodes, avatarEdges = getAvatarPositions()
 for participant in participants:
     sessions = getSessions(participant)
