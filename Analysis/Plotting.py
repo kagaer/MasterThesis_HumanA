@@ -5,7 +5,8 @@ import plotly.graph_objects as go
 import enum
 from MultipleUseFunctions import *
 
-def plotTotal(save_path, matrix, count_seeking, count_avoiding, participant = None,  sessions = (1,2,3,4,5), participants = None, weights_adjusted = ''):
+def plotTotal(matrix, count_seeking, count_avoiding, participant = None,  sessions = (1,2,3,4,5), participants = None, weights_adjusted = '', 
+              save_path = "E:/HumanA/Default/"):
     #save_path = "E:/HumanA/Analysis/StrategyMatrices/"
     #if experiment == 1:
     #    save_path = save_path + "Exp1/Dec_Expl_Matrix/"
@@ -22,6 +23,17 @@ def plotTotal(save_path, matrix, count_seeking, count_avoiding, participant = No
 
     total_decisions = "Total Decisions Agent Seeking: " + str(count_seeking) + " | Total Decisions Agent Avoiding: " + str(count_avoiding)
     title = "Participant: " + str(participant)  + weights_adjusted + "<br>" + total_decisions
+
+    sum_avatAtChos = matrix[0][0].sum() + matrix[0][1].sum() + matrix[0][2].sum() +  matrix[0][3].sum() + matrix[0][4].sum()
+    sum_avatAtNotChos = matrix[1][0].sum() + matrix[1][1].sum() + matrix[1][2].sum() +  matrix[1][3].sum() + matrix[1][4].sum()
+    sum_avatAtBoth = matrix[2][0].sum() + matrix[2][1].sum() + matrix[2][2].sum() +  matrix[2][3].sum() + matrix[2][4].sum()
+    sum_NoavatAtBoth = matrix[3][0].sum() + matrix[3][1].sum() + matrix[3][2].sum() +  matrix[3][3].sum() + matrix[3][4].sum() 
+    sum_Total = sum_avatAtChos + sum_avatAtNotChos + sum_avatAtBoth + sum_NoavatAtBoth
+
+    perc_avatAtChos = round((sum_avatAtChos/sum_Total), 2)
+    perc_avatAtNotChos = round((sum_avatAtNotChos/sum_Total), 2)
+    perc_avatAtBoth = round((sum_avatAtBoth/sum_Total), 2)
+    perc_NoavatAtBoth = round((sum_NoavatAtBoth/sum_Total), 2)
 
     diagonal_lines = [
         {'type': 'line', 'line': { 'color': 'red', 'width': 1 },'yref': 'paper', 'xref': 'paper', 'y0': 0.825, 'y1': 1, 'x0': 0, 'x1': 0.168},
@@ -49,14 +61,25 @@ def plotTotal(save_path, matrix, count_seeking, count_avoiding, participant = No
     fig = make_subplots(
         rows=4, 
         cols=5, 
-        subplot_titles=("Agent at Chosen Direction: <br>Session 1", "Session 2", "Session 3", "Session 4", "Session 5",
-                        "Agent at not Chosen Direction <br>Session 1", "Session 2", "Session 3", "Session 4", "Session 5",
-                        "Agent at both Directions <br>Session 1", "Session 2", "Session 3", "Session 4", "Session 5",
-                        "No Agent at both Directions <br>Session 1", "Session 2", "Session 3", "Session 4", "Session 5"), 
-        x_title="Number of previous avoiding decisions", 
-        y_title="Number of previous seeking decisions",
+        subplot_titles=("Agent at Chosen Direction (" + str(perc_avatAtChos) + "): <br>" + "Session 1:" , "Session 2: ", "Session 3","Session 4", "Session 5",
+                        "Agent at not Chosen Direction (" + str(perc_avatAtNotChos) + "): <br>Session 1", "Session 2", "Session 3", "Session 4", "Session 5",
+                        "Agent at both Directions (" + str(perc_avatAtBoth) + "):<br>Session 1", "Session 2", "Session 3", "Session 4", "Session 5",
+                        "No Agent at both Directions (" + str(perc_NoavatAtBoth) + "): <br>Session 1", "Session 2", "Session 3", "Session 4", "Session 5"), 
+        x_title="Number of previous visits not chosen nodes", 
+        y_title="Number of previous visits chosen node",
         vertical_spacing = 0.1
         )
+    #fig = make_subplots(
+    #    rows=4, 
+    #    cols=5, 
+    #    subplot_titles=("Agent at Chosen Direction: <br>Session 1", "Session 2", "Session 3", "Session 4", "Session 5",
+    #                    "Agent at not Chosen Direction <br>Session 1", "Session 2", "Session 3", "Session 4", "Session 5",
+    #                    "Agent at both Directions <br>Session 1", "Session 2", "Session 3", "Session 4", "Session 5",
+    #                    "No Agent at both Directions <br>Session 1", "Session 2", "Session 3", "Session 4", "Session 5"), 
+    #    x_title="Number of previous avoiding decisions", 
+    #    y_title="Number of previous seeking decisions",
+    #    vertical_spacing = 0.1
+    #    )
 
     fig.update_layout(margin=dict(t=200))
     for i in range(4):
@@ -96,7 +119,8 @@ def plotTotal(save_path, matrix, count_seeking, count_avoiding, participant = No
     fig.write_image((save_path + filename))
 
 
-def plotSession(save_path, matrix, count_seeking, count_avoiding, participant = None,  sessions = (1,2,3,4,5), participants = None, weights_adjusted = ''):
+def plotSession(matrix, count_seeking, count_avoiding, participant = None,  sessions = (1,2,3,4,5), participants = None, weights_adjusted = '', 
+                save_path = "E:/HumanA/Default/"):
     #save_path = "E:/HumanA/Analysis/StrategyMatrices/"
     #if experiment == 1:
     #    save_path = save_path + "Exp1/Dec_Expl_Matrix/"
@@ -111,7 +135,19 @@ def plotSession(save_path, matrix, count_seeking, count_avoiding, participant = 
         participant = 'All Participants (n = ' + str(nr_participants) + ")"
 
     
-    title = "Participant: " + str(participant) +  "<br>" 
+    title = "Participant: " + str(participant) + weights_adjusted + "<br>" 
+
+    sum_avatAtChos = matrix[0][0].sum() + matrix[0][1].sum() + matrix[0][2].sum() +  matrix[0][3].sum() + matrix[0][4].sum()
+    sum_avatAtNotChos = matrix[1][0].sum() + matrix[1][1].sum() + matrix[1][2].sum() +  matrix[1][3].sum() + matrix[1][4].sum()
+    sum_avatAtBoth = matrix[2][0].sum() + matrix[2][1].sum() + matrix[2][2].sum() +  matrix[2][3].sum() + matrix[2][4].sum()
+    sum_NoavatAtBoth = matrix[3][0].sum() + matrix[3][1].sum() + matrix[3][2].sum() +  matrix[3][3].sum() + matrix[3][4].sum() 
+    sum_Total = sum_avatAtChos + sum_avatAtNotChos + sum_avatAtBoth + sum_NoavatAtBoth
+
+    perc_avatAtChos = round((sum_avatAtChos/sum_Total), 2)
+    perc_avatAtNotChos = round((sum_avatAtNotChos/sum_Total), 2)
+    perc_avatAtBoth = round((sum_avatAtBoth/sum_Total), 2)
+    perc_NoavatAtBoth = round((sum_NoavatAtBoth/sum_Total), 2)
+
 
     diagonal_lines = [
         {'type': 'line', 'line': { 'color': 'red', 'width': 1 },'yref': 'paper', 'xref': 'paper', 'y0': 0.825, 'y1': 1, 'x0': 0, 'x1': 0.168},
@@ -143,11 +179,11 @@ def plotSession(save_path, matrix, count_seeking, count_avoiding, participant = 
     fig = make_subplots(
         rows=4, 
         cols=5, 
-        subplot_titles=(session_decisions[0] + "Agent at Chosen Direction: <br>" + "Session 1:" ,  session_decisions[1] + "<br>Session 2: ", 
+        subplot_titles=(session_decisions[0] + "Agent at Chosen Direction (" + str(perc_avatAtChos) + "): <br>" + "Session 1:" ,  session_decisions[1] + "<br>Session 2: ", 
             session_decisions[2]+"<br>Session 3", session_decisions[3] +"<br>Session 4",  session_decisions[4]+"<br>Session 5",
-                        "Agent at not Chosen Direction <br>Session 1", "Session 2", "Session 3", "Session 4", "Session 5",
-                        "Agent at both Directions <br>Session 1", "Session 2", "Session 3", "Session 4", "Session 5",
-                        "No Agent at both Directions <br>Session 1", "Session 2", "Session 3", "Session 4", "Session 5"), 
+                        "Agent at not Chosen Direction (" + str(perc_avatAtNotChos) + "): <br>Session 1", "Session 2", "Session 3", "Session 4", "Session 5",
+                        "Agent at both Directions (" + str(perc_avatAtBoth) + "):<br>Session 1", "Session 2", "Session 3", "Session 4", "Session 5",
+                        "No Agent at both Directions (" + str(perc_NoavatAtBoth) + "): <br>Session 1", "Session 2", "Session 3", "Session 4", "Session 5"), 
         x_title="Number of previous visits not chosen nodes", 
         y_title="Number of previous visits chosen node",
         vertical_spacing = 0.1

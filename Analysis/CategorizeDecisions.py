@@ -70,7 +70,7 @@ def getSessions(participant):
     """
 
     sql_instruction = f"""
-    SELECT DISTINCT sessionNr FROM trials WHERE participantId = {participant} AND WHERE validSession = 'VALID';
+    SELECT DISTINCT sessionNr FROM trials WHERE participantId = {participant} AND validSession = 'VALID'
     ORDER BY sessionNr;
     """
     cr.execute(sql_instruction)
