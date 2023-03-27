@@ -32,54 +32,54 @@ class TrialValidity(enum.Enum):
     Undefined = 4
 
 
-def getParticipants():
-    """get all participantIds from the database
+#def getParticipants():
+#    """get all participantIds from the database
+#
+#    Returns:
+#        tuple: list of participants
+#    """
+#    # select all participantIds and return them
+#    sql_instruction = """
+#    SELECT DISTINCT participantId FROM trials WHERE validParticipant = 'VALID';
+#    """
+#    cr.execute(sql_instruction)
+#    participants = tuple(did[0] for did in cr.fetchall())
+#    return participants
 
-    Returns:
-        tuple: list of participants
-    """
-    # select all participantIds and return them
-    sql_instruction = """
-    SELECT DISTINCT participantId FROM trials WHERE validParticipant = 'VALID';
-    """
-    cr.execute(sql_instruction)
-    participants = tuple(did[0] for did in cr.fetchall())
-    return participants
+#def getSessions(participant):
+#    """get all sessionNrs for the current participant from the database
+#
+#    Returns:
+#        tuple: list of participants
+#    """
+#    # select all participantIds and return them
+#    sql_instruction = f"""
+#    SELECT DISTINCT sessionNr FROM trials WHERE participantId = {participant} AND validSession = 'VALID'
+#    ORDER BY sessionNr;
+#    """
+#    cr.execute(sql_instruction)
+#    sessions = tuple(did[0] for did in cr.fetchall())
+#    return sessions
 
-def getSessions(participant):
-    """get all sessionNrs for the current participant from the database
-
-    Returns:
-        tuple: list of participants
-    """
-    # select all participantIds and return them
-    sql_instruction = f"""
-    SELECT DISTINCT sessionNr FROM trials WHERE participantId = {participant} AND validSession = 'VALID'
-    ORDER BY sessionNr;
-    """
-    cr.execute(sql_instruction)
-    sessions = tuple(did[0] for did in cr.fetchall())
-    return sessions
-
-def getTrialNrs(participant, session):
-    """get all trialIds for the current participant, current session
-
-    Args:
-        participant (int): current participant
-
-    Returns:
-        tuple: all trialIds 
-    """
-
-    sql_instruction = f"""
-    SELECT DISTINCT id 
-    FROM trials
-    WHERE participantId = {participant} AND sessionNr = {session}
-    """
-    
-    cr.execute(sql_instruction)
-    trialIdx = tuple(did[0] for did in cr.fetchall())
-    return trialIdx
+#def getTrialNrs(participant, session):
+#    """get all trialIds for the current participant, current session
+#
+#    Args:
+#        participant (int): current participant
+#
+#    Returns:
+#        tuple: all trialIds 
+#    """
+#
+#    sql_instruction = f"""
+#    SELECT DISTINCT id 
+#    FROM trials
+#    WHERE participantId = {participant} AND sessionNr = {session}
+#    """
+#    
+#    cr.execute(sql_instruction)
+#    trialIdx = tuple(did[0] for did in cr.fetchall())
+#    return trialIdx
 
 def getDatapoints(trials):
     """get all datapoints for the current trial, sorted by the timestamp (timeStampDataPointStart), and joined with the trialId and participantId
@@ -268,7 +268,7 @@ def plotAndSafeStratMatrix(matrix_total,matrix_sessions, participant = None, ses
 
 
 
-participants = getParticipants()
+participants = getParticipants(cr)
 max_node = getMaxNodeFromDB()
 
 
@@ -282,7 +282,7 @@ for participant in participants:
     
     strategy_matrix_participant_total = [np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))]
     strategy_matrix_participant_perSession = [np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))]
-    sessions = getSessions(participant)
+    sessions = getSessions(participant, cr)
     last_session = 0
 
     last_node = []
@@ -298,7 +298,7 @@ for participant in participants:
 
         
         max_visits_session_participant = 0
-        trials = getTrialNrs(participant, session)
+        trials = getTrialNrs(participant, session, cr)
         if len(trials) < 3:
             print("Missing trials for this session")
             continue
