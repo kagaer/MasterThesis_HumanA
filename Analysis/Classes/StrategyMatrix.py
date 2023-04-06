@@ -7,9 +7,10 @@ class StrategyMatrix(Matrix):
     """Class for constructing a Strategy for a single participant"""
 
     def __init__(self, participantId, cursor, savepath= 'E:/HumanA/Default/'):
-        super().__init__(participantId, cursor, savepath)
-        self.matrix_total = [np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))]
-        self.matrix_perSession = [np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))]
+        super().__init__(participantId, cursor, savepath = savepath)
+        #self.matrix_total = [np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))]
+        #self.matrix_perSession = [np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))]
+        
         self.createMatrix()
 
 # region GETTER    

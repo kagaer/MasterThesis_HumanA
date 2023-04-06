@@ -5,7 +5,7 @@ import numpy as np
 class Matrix():
     """Class for constructing a Strategy for a single participant"""
 
-    def __init__(self, participantId, cursor, savepath = 'E:/HumanA/Default/'):
+    def __init__(self, participantId,   cursor, nrMatrixes = 1, savepath = 'E:/HumanA/Default/'):
         self.participantId = participantId
         self.cr = cursor
         self.sessions = Matrix.getSessions(self)
@@ -14,6 +14,21 @@ class Matrix():
         self.visits_node_total = [0]*(self.maxNode + 1)
         #self.visits_node_currentSes = [0]*(self.maxNode + 1)
         self.max_visits_total_participant = 0
+        if nrMatrixes == 1:
+            self.matrix_total= [np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))]
+            self.matrix_perSession = [np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))]
+        else:
+            self.matrix_total= []
+            self.matrix_perSession = []
+            for i in range(nrMatrixes):
+                self.matrix_total.append([np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))])
+                self.matrix_perSession.append([np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))])
+        #if nrMatrixes == 1:
+        #    self.matrix_total = [np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))]
+        #    self.matrix_perSession = [np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))]
+        #elif nrMatrixes > 1:
+        #    self.matrix_total = np.tile([np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))] , [nrMatrixes, 5])
+        #    self.matrix_perSession = np.tile([np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))] , [nrMatrixes, 5])
 
 # region GETTER
     def getSessions(self):

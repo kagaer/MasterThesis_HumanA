@@ -5,18 +5,20 @@ import plotly.graph_objects as go
 class AgentStrategyMatrix(Matrix):
     """Class for constructing a Strategy for a single participant"""
 
-    def __init__(self, participantId, cursor, savepath= 'E:/HumanA/Default/'):
-        super().__init__(participantId, cursor, savepath)
+    def __init__(self, participantId, cursor, weight = 0,savepath= 'E:/HumanA/Default/'):
+        nrMatrixes = 4
+        super().__init__(participantId, cursor, nrMatrixes, savepath)
 
-        self.matrix_total = [[np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))],
-                        [np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))],
-                        [np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))],
-                        [np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))]]
-        self.matrix_perSession = [[np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))],
-                        [np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))],
-                        [np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))],
-                        [np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))]]
+        #self.matrix_total = [[np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))],
+        #                [np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))],
+        #                [np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))],
+        #                [np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))]]
+        #self.matrix_perSession = [[np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))],
+        #                [np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))],
+        #                [np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))],
+        #                [np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0)), np.zeros((0,0))]]
         #self.max_visits_session_participant = 
+        self.weight = weight
         self.createMatrix()
 
     # region GETTER
@@ -98,12 +100,12 @@ class AgentStrategyMatrix(Matrix):
         for _,neighbour,decision in decisions:
             visits_neighbour_part_total,visits_neighbour_part_ses = self.getVisits(neighbour)
             if decision == 'AvatarAtChosen':
-                self.matrix_current_total[0][visits_cur_node_part_total][visits_neighbour_part_total] += 1
-                self.matrix_current_Session[0][visits_cur_node_part_ses][visits_neighbour_part_ses] += 1
+                self.matrix_current_total[0][visits_cur_node_part_total][visits_neighbour_part_total+self.weight] += 1
+                self.matrix_current_Session[0][visits_cur_node_part_ses][visits_neighbour_part_ses+self.weight] += 1
 
             elif decision == 'AvatarAtNotChosen':
-                self.matrix_current_total[1][visits_cur_node_part_total][visits_neighbour_part_total] += 1
-                self.matrix_current_Session[1][visits_cur_node_part_ses][visits_neighbour_part_ses] += 1
+                self.matrix_current_total[1][visits_cur_node_part_total+self.weight][visits_neighbour_part_total] += 1
+                self.matrix_current_Session[1][visits_cur_node_part_ses+self.weight][visits_neighbour_part_ses] += 1
             elif decision == 'AvatarAtBoth':
                 self.matrix_current_total[2][visits_cur_node_part_total][visits_neighbour_part_total] += 1
                 self.matrix_current_Session[2][visits_cur_node_part_ses][visits_neighbour_part_ses] += 1
@@ -118,42 +120,23 @@ class AgentStrategyMatrix(Matrix):
 
 
     def resizeStrategyMatrixes(self, session):
-        #global max_visits_total_participant
-        #global max_visits_session_participant
-        #global max_visits_total
-        #global max_visits_sessions
-        #global self.matrix_current_total
-        #global self.matrix_current_Session
-        #global strategy_matrix_total
-        #global strategy_matrix_perSession
 
 
-        if self.max_visits_total_participant < max(self.visits_node_total)+1 or (len(self.matrix_current_total[0]) == 0 
+
+
+        if self.max_visits_total_participant < max(self.visits_node_total)+1 + self.weight or (len(self.matrix_current_total[0]) == 0 
             or len(self.matrix_current_total[1]) == 0 or len(self.matrix_current_total[2]) == 0 or len(self.matrix_current_total[3]) == 0 ):
-            max_visits_total_participant = max(self.visits_node_total)+1
+            max_visits_total_participant = max(self.visits_node_total)+1 + self.weight
             for i in range(len(self.matrix_current_total)):
                 self.matrix_current_total[i] = Matrix.resize_matrix(self.matrix_current_total[i], max_visits_total_participant+1)
 
-        if self.max_visits_session_participant < max(self.visits_node_currentSes)+1 or (len(self.matrix_current_Session[0]) == 0 
+        if self.max_visits_session_participant < max(self.visits_node_currentSes)+1 + self.weight or (len(self.matrix_current_Session[0]) == 0 
             or len(self.matrix_current_Session[1]) == 0 or len(self.matrix_current_Session[2]) == 0 or len(self.matrix_current_Session[3]) == 0 ):
-            max_visits_session_participant = max(self.visits_node_currentSes)+1
+            max_visits_session_participant = max(self.visits_node_currentSes)+1 + self.weight
             for i in range(len(self.matrix_current_Session)):
                 self.matrix_current_Session[i] = Matrix.resize_matrix(self.matrix_current_Session[i], max_visits_session_participant+1)
 
-        #if max_visits_total <= self.max_visits_total_participant or (len(self.matrix_total[0][session-1]) <= max_visits_total or 
-        #    len(strategy_matrix_total[1][session-1]) <= max_visits_total or len(strategy_matrix_total[2][session-1]) <= max_visits_total or len(strategy_matrix_total[3][session-1]) <= max_visits_total):
-        #    if max_visits_total <= max_visits_total_participant:
-        #        max_visits_total = max_visits_total_participant+1
-##
-        #    for i in range(len(strategy_matrix_total)):
-        #        strategy_matrix_total[i][session-1]  = resize_matrix(strategy_matrix_total[i][session-1] , max_visits_total+1)
-#
-        #if max_visits_sessions <= max_visits_session_participant or (len(strategy_matrix_perSession[0][session-1]) <= max_visits_sessions or
-        #    len(strategy_matrix_perSession[1][session-1]) <= max_visits_sessions or len(strategy_matrix_perSession[2][session-1]) <= max_visits_sessions or len(strategy_matrix_perSession[3][session-1]) <= max_visits_sessions):
-        #    if max_visits_sessions <= max_visits_session_participant:
-        #        max_visits_sessions = max_visits_session_participant+1
-        #    for i in range(len(strategy_matrix_perSession)):
-        #        strategy_matrix_perSession[i][session-1]  = resize_matrix(strategy_matrix_perSession[i][session-1] , max_visits_sessions+1)
+
     # endregion ADJUST MATRIX
     def createMatrix(self):
 
@@ -224,7 +207,7 @@ class AgentStrategyMatrix(Matrix):
             #last_session = session
             #print("All visits counted")
 
-    def plotTotal(self, matrix, sessions = (1,2,3,4,5), weights_adjusted = ''):
+    def plotTotal(self, matrix, sessions = (1,2,3,4,5), weights_adjusted = False):
         #save_path = "E:/HumanA/Analysis/StrategyMatrices/"
         #if experiment == 1:
         #    save_path = save_path + "Exp1/Dec_Expl_Matrix/"
@@ -232,15 +215,16 @@ class AgentStrategyMatrix(Matrix):
         #    save_path = save_path + "Exp2/Dec_Expl_Matrix/"
 
 
-        #if participant != None:
-        filename = str(self.participantId) + "_Decision_Matrix_Avatars_Total" +  ".png"
-        ##else:
-        #    nr_participants = len(participants)
-        #    filename = "AllParticipants_Decision_Matrix_Avatars_Total" + ".png"
-        #    participant = 'All Participants (n = ' + str(nr_participants) + ")" 
+        if not weights_adjusted:
+            filename = str(self.participantId) + "_Decision_Matrix_Avatars_Total.png"
+            title = "Participant: " + str(self.participantId)
+        else: 
+            filename = str(self.participantId) + "_Weighted_Decision_Matrix_Avatars_Total.png"
+            title = "Participant: " + str(self.participantId)  + " Weight: " + str(self.weight)
+ 
 
         #total_decisions = "Total Decisions Agent Seeking: " + str(count_seeking) + " | Total Decisions Agent Avoiding: " + str(count_avoiding)
-        title = "Participant: " + str(self.participantId)  + weights_adjusted #"<br>" #+ total_decisions
+        #title = "Participant: " + str(self.participantId)  + str(self.weight) #"<br>" #+ total_decisions
 
         sum_avatAtChos = matrix[0][0].sum() + matrix[0][1].sum() + matrix[0][2].sum() +  matrix[0][3].sum() + matrix[0][4].sum()
         sum_avatAtNotChos = matrix[1][0].sum() + matrix[1][1].sum() + matrix[1][2].sum() +  matrix[1][3].sum() + matrix[1][4].sum()
@@ -337,7 +321,7 @@ class AgentStrategyMatrix(Matrix):
         fig.write_image((self.savepath + filename))
 
 
-    def plotSession(self, matrix, sessions = (1,2,3,4,5), weights_adjusted = ''):
+    def plotSession(self, matrix, sessions = (1,2,3,4,5), weights_adjusted = False):
         #save_path = "E:/HumanA/Analysis/StrategyMatrices/"
         #if experiment == 1:
         #    save_path = save_path + "Exp1/Dec_Expl_Matrix/"
@@ -345,14 +329,19 @@ class AgentStrategyMatrix(Matrix):
         #    save_path = save_path + "Exp2/Dec_Expl_Matrix/"
 
         #if participant != None:
-        filename = str(self.participantId) + "_Decision_Matrix_Avatars_Session" +  ".png"
+        if not weights_adjusted:
+            filename = str(self.participantId) + "_Decision_Matrix_Avatars_Session" +  ".png"
+            title = "Participant: " + str(self.participantId)
+        else:
+            filename = str(self.participantId) + "_Weighted_Decision_Matrix_Avatars_Session" +  ".png"
+            title = "Participant: " + str(self.participantId) + " Weight: " + str(self.weight)
         #else:
         #    nr_participants = len(participants)
         #    filename = "AllParticipants_Decision_Matrix_Avatars_Session" + ".png"
         #    participant = 'All Participants (n = ' + str(nr_participants) + ")"
 
 
-        title = "Participant: " + str(self.participantId) + weights_adjusted 
+        #title = "Participant: " + str(self.participantId) + weights_adjusted 
 
         sum_avatAtChos = matrix[0][0].sum() + matrix[0][1].sum() + matrix[0][2].sum() +  matrix[0][3].sum() + matrix[0][4].sum()
         sum_avatAtNotChos = matrix[1][0].sum() + matrix[1][1].sum() + matrix[1][2].sum() +  matrix[1][3].sum() + matrix[1][4].sum()
@@ -444,5 +433,9 @@ class AgentStrategyMatrix(Matrix):
         fig.write_image((self.savepath + filename))
 
     def plotMatrix(self):
-        self.plotTotal(self.matrix_total,self.sessions)
-        self.plotSession(self.matrix_perSession,self.sessions,)
+        if self.weight == 0:
+            self.plotTotal(self.matrix_total,self.sessions)
+            self.plotSession(self.matrix_perSession,self.sessions,)
+        else:
+            self.plotTotal(self.matrix_total,self.sessions, True)
+            self.plotSession(self.matrix_perSession,self.sessions,True)
