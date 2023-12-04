@@ -12,6 +12,7 @@ class Matrix():
         self.maxNode = Matrix.getMaxNodeFromDB(self)
         self.savepath = savepath
         self.visits_node_total = [0]*(self.maxNode + 1)
+        self.visits_over_sessions = []
         #self.visits_node_currentSes = [0]*(self.maxNode + 1)
         self.max_visits_total_participant = 0
         if nrMatrixes == 1:

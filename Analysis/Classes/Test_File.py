@@ -11,8 +11,8 @@ cr=connection.cursor()
 
 test_matrix = StrategyMatrix(participantId = 1754, cursor = cr)
 agentTest_matrix = AgentStrategyMatrix(participantId = 1754, cursor = cr)
-weightedagentTest_matrix = AgentStrategyMatrix(participantId = 1754, cursor = cr, weight=1)
-weightedagentTest_matrix.plotMatrix()
+#weightedagentTest_matrix = AgentStrategyMatrix(participantId = 1754, cursor = cr, weight=1)
+#weightedagentTest_matrix.plotMatrix()
 #test_matrix.createMatrix()
 #matrix = Matrix(participantId = 1754, cursor = cr)
 

@@ -192,7 +192,7 @@ class AgentStrategyMatrix(Matrix):
             self.matrix_perSession[2][session-1] = self.matrix_current_Session[2]
             self.matrix_perSession[3][session-1] = self.matrix_current_Session[3]
 
-
+            self.visits_over_sessions.append(self.visits_node_currentSes)
             #strategy_matrix_total[0][session-1] = addUpMatrices(strategy_matrix_total[0][session-1], self.matrix_current_total[0]) 
             #strategy_matrix_total[1][session-1] = addUpMatrices(strategy_matrix_total[1][session-1], self.matrix_current_total[1]) 
             #strategy_matrix_total[2][session-1] = addUpMatrices(strategy_matrix_total[2][session-1], self.matrix_current_total[2]) 

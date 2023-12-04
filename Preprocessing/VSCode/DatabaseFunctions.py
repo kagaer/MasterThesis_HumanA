@@ -66,7 +66,7 @@ def getTrialNrs(participant, session, cr):
     sql_instruction = f"""
     SELECT DISTINCT id 
     FROM trials
-    WHERE participantId = {participant} AND sessionNr = {session} AND ((validSession IS NULL OR NOT validSession = 'INVALID') AND NOT validParticipant = 'INVALID')
+    WHERE (participantId = {participant} AND sessionNr = {session}) AND (validSession IS NULL OR NOT validSession = 'INVALID') AND (validParticipant IS NULL OR NOT validParticipant = 'INVALID')
     """
     
     cr.execute(sql_instruction)
@@ -86,7 +86,7 @@ def getTrialsParticipant(participant, cr):
     sql_instruction = f"""
     SELECT DISTINCT id 
     FROM trials
-    WHERE participantId = {participant} AND ((validSession IS NULL OR NOT validSession = 'INVALID') AND NOT validParticipant = 'INVALID')
+    WHERE participantId = {participant} AND (validSession IS NULL OR NOT validSession = 'INVALID') AND (validParticipant IS NULL OR NOT validParticipant = 'INVALID')
     """
     
     cr.execute(sql_instruction)

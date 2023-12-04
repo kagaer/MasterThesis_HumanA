@@ -8,6 +8,7 @@ from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 import enum
 from MultipleUseFunctions import *
+import colorlover as cl
 
 # path to databases
 print("For which experiment would you like to reduce the data?")
@@ -16,6 +17,8 @@ if experiment == 1:
     db_path = Path('E:/HumanA/Data/Database/HumanA_Exp1.db')
 elif experiment == 2:
     db_path = Path('E:/HumanA/Data/Database/HumanA_Exp2.db')
+elif experiment == 3:
+    db_path = Path('E:/HumanA/Data/Database/HumanA_Control.db')
 
 # check if path exists
 if not db_path or not db_path.exists():
@@ -24,6 +27,12 @@ if not db_path or not db_path.exists():
 # connect to database
 connection=sqlite3.connect(db_path)
 cr=connection.cursor()
+# '#FBEDDA', "#F7DDB5", 
+hex_colors = ["#F2CC8F", '#D7C48F', '#BBBB8E', '#A0B28D', '#84A98C', '#6F9B77', '#64906C', '#5D8364', '#3D5141']
+
+# Generate the continuous colorscale
+num_colors = len(hex_colors)
+colorscale = [[i/(num_colors-1), color] for i, color in enumerate(hex_colors)]
 
 class TrialValidity(enum.Enum):
     Valid = 1
@@ -173,35 +182,39 @@ def plotAndSafeStratMatrix(matrix_total,matrix_sessions, participant = None, ses
 
     elif experiment == 2:
         save_path = save_path + "Exp2/Strategy_Matrix/"
+    elif experiment == 3: 
+        save_path = save_path + "Control/Strategy_Matrix/"
 
     if participant != None:
         filename = "Strategy_Matrix_Expl_" + str(participant) + ".png"
     else:
+        nr_participants = len(participants)
         filename = "Strategy_Matrix_Expl_Total" + ".png"
+        participant = 'All Participants (n = ' + str(nr_participants) + ")" 
 
     #filename = "Strategy_Matrix_" + str(participant) + ".png"
     title = "Participant " + str(participant)
 
 
-    line = { 'color': 'red', 'width': 1 }
+    line = { 'color': '#b36a5e', 'width': 1 }
     diagonal_lines = [
-        {'type': 'line', 'line': { 'color': 'red', 'width': 1 }, 'yref': 'paper', 'xref': 'paper', 'y0': 0.626, 'y1': 1, 'x0': 0, 'x1': 0.168},
-        {'type': 'line', 'line': { 'color': 'red', 'width': 1 },'yref': 'paper', 'xref': 'paper', 'y0': 0.626, 'y1': 1, 'x0': 0.208, 'x1': 0.376},
-        {'type': 'line', 'line': { 'color': 'red', 'width': 1 },'yref': 'paper', 'xref': 'paper', 'y0': 0.626, 'y1': 1, 'x0': 0.417, 'x1': 0.584},
-        {'type': 'line', 'line': { 'color': 'red', 'width': 1 },'yref': 'paper', 'xref': 'paper', 'y0': 0.626, 'y1': 1, 'x0': 0.624, 'x1': 0.792},
-        {'type': 'line', 'line': { 'color': 'red', 'width': 1 },'yref': 'paper', 'xref': 'paper', 'y0': 0.626, 'y1': 1, 'x0': 0.832, 'x1': 1},
-        {'type': 'line', 'line': { 'color': 'red', 'width': 1 }, 'yref': 'paper', 'xref': 'paper', 'y0': 0, 'y1': 0.374, 'x0': 0, 'x1': 0.168},
-        {'type': 'line', 'line': { 'color': 'red', 'width': 1 },'yref': 'paper', 'xref': 'paper', 'y0': 0, 'y1': 0.374, 'x0': 0.208, 'x1': 0.376},
-        {'type': 'line', 'line': { 'color': 'red', 'width': 1 },'yref': 'paper', 'xref': 'paper', 'y0': 0, 'y1': 0.374, 'x0': 0.417, 'x1': 0.584},
-        {'type': 'line', 'line': { 'color': 'red', 'width': 1 },'yref': 'paper', 'xref': 'paper', 'y0': 0, 'y1': 0.374, 'x0': 0.624, 'x1': 0.792},
-        {'type': 'line', 'line': { 'color': 'red', 'width': 1 },'yref': 'paper', 'xref': 'paper', 'y0': 0, 'y1': 0.374, 'x0': 0.832, 'x1': 1} 
+        {'type': 'line', 'line': { 'color': '#b36a5e', 'width': 1 }, 'yref': 'paper', 'xref': 'paper', 'y0': 0.626, 'y1': 1, 'x0': 0, 'x1': 0.168},
+        {'type': 'line', 'line': { 'color': '#b36a5e', 'width': 1 },'yref': 'paper', 'xref': 'paper', 'y0': 0.626, 'y1': 1, 'x0': 0.208, 'x1': 0.376},
+        {'type': 'line', 'line': { 'color': '#b36a5e', 'width': 1 },'yref': 'paper', 'xref': 'paper', 'y0': 0.626, 'y1': 1, 'x0': 0.417, 'x1': 0.584},
+        {'type': 'line', 'line': { 'color': '#b36a5e', 'width': 1 },'yref': 'paper', 'xref': 'paper', 'y0': 0.626, 'y1': 1, 'x0': 0.624, 'x1': 0.792},
+        {'type': 'line', 'line': { 'color': '#b36a5e', 'width': 1 },'yref': 'paper', 'xref': 'paper', 'y0': 0.626, 'y1': 1, 'x0': 0.832, 'x1': 1},
+        {'type': 'line', 'line': { 'color': '#b36a5e', 'width': 1 }, 'yref': 'paper', 'xref': 'paper', 'y0': 0, 'y1': 0.374, 'x0': 0, 'x1': 0.168},
+        {'type': 'line', 'line': { 'color': '#b36a5e', 'width': 1 },'yref': 'paper', 'xref': 'paper', 'y0': 0, 'y1': 0.374, 'x0': 0.208, 'x1': 0.376},
+        {'type': 'line', 'line': { 'color': '#b36a5e', 'width': 1 },'yref': 'paper', 'xref': 'paper', 'y0': 0, 'y1': 0.374, 'x0': 0.417, 'x1': 0.584},
+        {'type': 'line', 'line': { 'color': '#b36a5e', 'width': 1 },'yref': 'paper', 'xref': 'paper', 'y0': 0, 'y1': 0.374, 'x0': 0.624, 'x1': 0.792},
+        {'type': 'line', 'line': { 'color': '#b36a5e', 'width': 1 },'yref': 'paper', 'xref': 'paper', 'y0': 0, 'y1': 0.374, 'x0': 0.832, 'x1': 1} 
             ]  
 
     fig = make_subplots(
         rows=2, 
         cols=5, 
-        subplot_titles=("session 1", "session 2", "session 3", "session 4", "session 5",
-                        "session 1", "session 2", "session 3", "session 4", "session 5"), 
+        subplot_titles=("Session 1", "Session 2", "Session 3", "Session 4", "Session 5",
+                        "Session 1", "Session 2", "Session 3", "Session 4", "Session 5"), 
         x_title="Number of previous visits of the neighbouring nodes", 
         y_title="Number of previous visits of the chosen node"
     )
@@ -213,7 +226,8 @@ def plotAndSafeStratMatrix(matrix_total,matrix_sessions, participant = None, ses
             perc_expl = round((count_expl/count_total),2)
             matrix_text = np.array(np.array(matrix_total[session-1],dtype='int'),dtype='str')
             matrix_text[matrix_text == '0'] = ""
-            colorscale = "Sunset"
+            #colorscale = "BuGn"
+            #colorscale = "Sunset"
             fig.add_trace(go.Heatmap(z=matrix_total[session-1], text=matrix_text, texttemplate="%{text}", textfont={"size":10}, colorscale = colorscale,), 
                 row=1, col=session)
             fig.update_traces(showscale=False)
@@ -241,7 +255,8 @@ def plotAndSafeStratMatrix(matrix_total,matrix_sessions, participant = None, ses
             perc_expl = round((count_expl/count_total),2)
             matrix_text = np.array(np.array(matrix_sessions[session-1],dtype='int'),dtype='str')
             matrix_text[matrix_text == '0'] = ""
-            colorscale = "Sunset"
+            #colorscale = "BuGn"
+            #colorscale = "Sunset"
             fig.add_trace(go.Heatmap(z=matrix_sessions[session-1], text=matrix_text, texttemplate="%{text}", textfont={"size":10}, colorscale = colorscale,), 
                 row=2, col=session)
             fig.update_traces(showscale=False)
