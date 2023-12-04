@@ -1,7 +1,4 @@
-# MasterThesis_HumanA
-
 Documentation
-All final versions of the scripts can be found in the Folder 'Final_Scripts'
 
 Preprocessing Scripts:
 
