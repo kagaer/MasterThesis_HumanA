@@ -5,7 +5,8 @@ Preprocessing Scripts:
 - 01_CreateDB.py
     - creates the Database tables for the raw participant data and adds the raw data to the database
 - 02_CreateGraph.ipynb
-    - creates the graph from the CSV file of the Master Thesis of Mellissa and stores it in the database
+    - creates the graph from the CSV file of the Master Thesis of Melissa and stores it in the database
+    - NOTE: this script needs the coordinates_old.csv file from Melissa's Thesis
 - 03_Graph_Coordinates.ipynb
     - saves the elements of the graph with the corresponding coordinates and neighbours to the database
     - information about the node: nodeRadius, nodeCentroid x and z, corresponding x and z coordinates (pixel values)

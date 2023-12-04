@@ -1,1 +1,74 @@
 # MasterThesis_HumanA
+
+Documentation
+All final versions of the scripts can be found in the Folder 'Final_Scripts'
+
+Preprocessing Scripts:
+
+- 01_CreateDB.py
+    - creates the Database tables for the raw participant data and adds the raw data to the database
+- 02_CreateGraph.ipynb
+    - creates the graph from the CSV file of the Master Thesis of Melissa and stores it in the database
+    - NOTE: this script needs the coordinates_old.csv file from Melissa's Thesis
+- 03_Graph_Coordinates.ipynb
+    - saves the elements of the graph with the corresponding coordinates and neighbours to the database
+    - information about the node: nodeRadius, nodeCentroid x and z, corresponding x and z coordinates (pixel values)
+    - information about the edges: edgeStart & edgeEnd (neighbouring nodes nrs), corresponding x and z coordinates (pixel values)
+- 04_CreateAvatarsDB.ipynb
+    - creates the Database table for the raw Avatars data
+- 05_Avatar_Reduction
+    - saves only necessary information of the raw avatar data & converts coordinates
+- 06_CheckSessionValidity.py
+    - Checks if for each participants a set of 5 sessions, 30 minutes each exists
+    - labels sessions and particpants as 'Valid' or 'Invalid' accordingly
+- 07_AssignNodes.py
+    - Assigns nodes to each datapoint and reduces data to only contain datapoints with switching graph elements
+- 08_FindShortestConnection.py
+    - Algorithm to find the shortest connection between nodes that skip over others (edge-to-edge transitions), 
+      to achieve a sequence of visited nodes 
+- 09_DataReductionAnalysis.py
+    -  Creates a cleaned table of all datapoints necessary for the analysis
+- 10_CategorizeDecisions
+    - Categorizes decisions made by participants according to the four categories 'Agent At Chosen', 'Agent At Not Chosen', 'Agent At Both'
+      and 'No Agent At Both'.
+    - Categorizations are made depending on whether and where an agent is involved in the decision (meaning an agent present at an intersection)
+
+- Additionally: DatabaseFunctions
+    - Set of Functions to access information from the database, used in multiple of the above scripts
+
+Analysis Scripts:
+
+- Classes:
+      1. Matrices.py
+	 - Class for constructing a Matrix for a single participant
+         - Final Size of the Matrix depends on the type of matrix that should be constructed
+         - holds a set of functions necessary for the construction of strategy matrices
+      2. AgentStrategyMatrix.py
+         - Class for constructing a Strategy Matrix for a single participant, for the four categories of agent presence
+	 - inherits functions from Matrices.py
+	 - can be used to create matrices for further analysis from other scripts
+         - can be used for construction of the regular and weighted strategy matrices by adjusting the 'weight' variable
+      3. TotalMatrices.py
+	 - Class for constructing Strategy Matrices for all participants, for the four categories of agent presence
+	 - might not work properly, as it has not been used for the construction of matrices yet
+
+- Others: 
+      1. StrategyMatrix_Avatars_Expl
+	 - used to create and plot strategy matrices for single participants, as well as for all participants combined
+      2. StrategyMatrix_Avatars_Expl_Weighted
+         - used to create and plot weighted strategy matrices for single participants, as well as for all participants combined
+      3. Descriptive_Analysis.ipynb
+	 - All plots used for the descriptive analysis
+
+- Additionally: MultipleUseFunctions
+    - Set of Functions, used in multiple of the above scripts
+
+Other useful scripts:
+- RecreateGraphFromDB.ipynb
+    - use this code to recreate the graph from the database
+- Create_Density_Matrix.ipynb
+    - creates a density matrix from the raw data for each participant and saves it to the database
+    - creates full density matrix over all participants and stores it in the database
+- Density_Plots
+    - creates density matrix plots of both experiments and calculates the normalized integral of each matrix
+    - NOTE: needs some adjustment (check Mellis renewed script)
