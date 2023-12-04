@@ -19,6 +19,11 @@ if experiment == 1:
 elif experiment == 2:
     db_path = Path('E:/HumanA/Data/Database/HumanA_Exp2.db')
     savepath = savepath + "Exp2/Dec_Expl_Matrix/"
+elif experiment == 3:
+    db_path = Path('E:/HumanA/Data/Database/HumanA_Control.db')
+    savepath = savepath + "Control/Dec_Expl_Matrix/"
+
+
 ## path to databases
 #print("For which experiment would you like to analyize the data?")
 #experiment = int(input())

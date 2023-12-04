@@ -9,8 +9,10 @@ def getParticipants(cr):
     """
     # select all participantIds and return them
     sql_instruction = """
-    SELECT DISTINCT participantId FROM trials WHERE validParticipant = 'VALID';
+    SELECT DISTINCT participantId FROM trials WHERE id IN (SELECT id FROM trials WHERE validSession = 'VALID' AND validParticipant = 'VALID')
     """
+    #SELECT DISTINCT participantId FROM trials WHERE validParticipant = 'VALID';
+    #"""
     cr.execute(sql_instruction)
     participants = tuple(did[0] for did in cr.fetchall())
     return participants
@@ -57,7 +59,7 @@ def getTrialNrs(participant, session, cr):
     sql_instruction = f"""
     SELECT DISTINCT id 
     FROM trials
-    WHERE participantId = {participant} AND sessionNr = {session}
+    WHERE participantId = {participant} AND sessionNr = {session} AND validSession = 'VALID' AND validParticipant = 'VALID'
     """
     
     cr.execute(sql_instruction)

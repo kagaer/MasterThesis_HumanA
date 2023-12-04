@@ -50,7 +50,7 @@ def getParticipants():
     # select all participantIds and return them
     sql_instruction = """
     SELECT DISTINCT participantId FROM trials
-    WHERE validParticipant = 'VALID' ;
+    WHERE NOT validParticipant = 'INVALID' ;
     """
     cr.execute(sql_instruction)
     participants = tuple(did[0] for did in cr.fetchall())

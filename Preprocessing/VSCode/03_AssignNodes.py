@@ -88,8 +88,11 @@ def getParticipants():
     """
     # select all participantIds and return them
     sql_instruction = """
-    SELECT DISTINCT participantId FROM trials WHERE validParticipant = 'VALID';
+    SELECT DISTINCT participantId FROM trials WHERE NOT validParticipant = 'INVALID';
     """
+    #sql_instruction = """
+    #SELECT DISTINCT participantId FROM trials WHERE validParticipant = 'VALID';
+    #"""
     cr.execute(sql_instruction)
     participants = tuple(did[0] for did in cr.fetchall())
     return participants
@@ -103,11 +106,15 @@ def getTrialNrs(participant):
     Returns:
         tuple: all trialIds 
     """
-
+    #sql_instruction = f"""
+    #SELECT DISTINCT id 
+    #FROM trials
+    #WHERE participantId = {participant} AND validSession = 'VALID';
+    #"""
     sql_instruction = f"""
     SELECT DISTINCT id 
     FROM trials
-    WHERE participantId = {participant} AND validSession = 'VALID';
+    WHERE participantId = {participant} AND NOT validSession = 'INVALID';
     """
     
     cr.execute(sql_instruction)
