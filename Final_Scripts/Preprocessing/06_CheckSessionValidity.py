@@ -7,10 +7,10 @@ print("For which experiment would you like to add Data to the Database?")
 experiment = int(input())
 if experiment == 1:
     db_path = Path('E:/HumanA/Data/DataBase/HumanA_Exp1.db')
-    path = Path('E:/HumanA/Data/Exp1/')
+    #path = Path('E:/HumanA/Data/Exp1/')
 elif experiment == 2:
     db_path = Path('E:/HumanA/Data/DataBase/HumanA_Exp2.db')
-    path = Path('E:/HumanA/Data/Exp2/')
+    #path = Path('E:/HumanA/Data/Exp2/')
 
 #db_path = Path("E:/HumanA/Data/Database/test.db")
 
@@ -18,8 +18,8 @@ if not db_path or not db_path.exists():
     db_path = ':memory:'
 
 
-if not path.exists():
-    raise Exception('Path not exists')      
+#if not path.exists():
+#    raise Exception('Path not exists')      
 
 connection=sqlite3.connect(db_path)
 cr=connection.cursor()

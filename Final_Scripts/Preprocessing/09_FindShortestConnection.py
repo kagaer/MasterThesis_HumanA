@@ -13,7 +13,6 @@ if experiment == 1:
 elif experiment == 2:
     db_path = Path('E:/HumanA/Data/Database/HumanA_Exp2.db')
     #db_path = Path('E:/HumanA/Data/HumanA_Exp2_WorkingData.db')
-
 # check if path exists
 if not db_path or not db_path.exists():
     db_path = ':memory:'

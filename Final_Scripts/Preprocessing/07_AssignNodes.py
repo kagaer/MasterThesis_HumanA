@@ -13,7 +13,6 @@ if experiment == 1:
 elif experiment == 2:
     db_path = Path('E:/HumanA/Data/Database/HumanA_Exp2.db')
     #db_path = Path('E:/HumanA/Data/HumanA_Exp2_WorkingData.db')
-
 # check if path exists
 if not db_path or not db_path.exists():
     db_path = ':memory:'
@@ -88,8 +87,8 @@ def getParticipants():
     """
     # select all participantIds and return them
     sql_instruction = """
-    SELECT DISTINCT participantId FROM trials WHERE NOT validParticipant = 'INVALID';
-    """
+    SELECT DISTINCT participantId FROM trials;""" # WHERE NOT validParticipant = 'INVALID';
+    
     #sql_instruction = """
     #SELECT DISTINCT participantId FROM trials WHERE validParticipant = 'VALID';
     #"""
@@ -114,8 +113,8 @@ def getTrialNrs(participant):
     sql_instruction = f"""
     SELECT DISTINCT id 
     FROM trials
-    WHERE participantId = {participant} AND NOT validSession = 'INVALID';
-    """
+    WHERE participantId = {participant} ;"""#AND NOT validSession = 'INVALID';
+    #"""
     
     cr.execute(sql_instruction)
     trialIdx = tuple(did[0] for did in cr.fetchall())

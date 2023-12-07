@@ -1,5 +1,7 @@
 Documentation
 
+jupyter notebook --notebook-dir=/Volumes/TwoTeras/Graph_Stuff
+
 Preprocessing Scripts:
 
 - 01_CreateDB.py
@@ -20,11 +22,11 @@ Preprocessing Scripts:
     - labels sessions and particpants as 'Valid' or 'Invalid' accordingly
 - 07_AssignNodes.py
     - Assigns nodes to each datapoint and reduces data to only contain datapoints with switching graph elements
-- 08_FindShortestConnection.py
+- 08_DataReductionAnalysis.py
+    -  Creates a cleaned table of all datapoints necessary for the analysis
+- 09_FindShortestConnection.py
     - Algorithm to find the shortest connection between nodes that skip over others (edge-to-edge transitions), 
       to achieve a sequence of visited nodes 
-- 09_DataReductionAnalysis.py
-    -  Creates a cleaned table of all datapoints necessary for the analysis
 - 10_CategorizeDecisions
     - Categorizes decisions made by participants according to the four categories 'Agent At Chosen', 'Agent At Not Chosen', 'Agent At Both'
       and 'No Agent At Both'.
